@@ -44,6 +44,16 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const { username, password } = options;
 
+    const userExists = await em.findOne(User, { username });
+
+    if (userExists) {
+      return {
+        errors: [{
+          message: 'User already exists',
+        }],
+      };
+    }
+
     if (username.length <= 2) {
       return {
         errors: [{
@@ -73,7 +83,7 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const { username, password } = options;
 
-    if (password.length <= 6) {
+    if (password.length <= 2) {
       return {
         errors: [{
           message: 'Password length must be greater than 2',
