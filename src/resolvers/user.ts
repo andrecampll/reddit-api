@@ -23,6 +23,9 @@ class UsernamePasswordInput {
 @ObjectType()
 class FieldError {
   @Field()
+  field: string;
+
+  @Field()
   message: string;
 }
 
@@ -65,6 +68,7 @@ export class UserResolver {
     if (userExists) {
       return {
         errors: [{
+          field: 'username',
           message: 'User already exists',
         }],
       };
@@ -73,6 +77,7 @@ export class UserResolver {
     if (username.length <= 2) {
       return {
         errors: [{
+          field: 'username',
           message: 'Username length must be greater than 2',
         }],
       };
@@ -102,6 +107,7 @@ export class UserResolver {
     if (password.length <= 2) {
       return {
         errors: [{
+          field: 'password',
           message: 'Password length must be greater than 2',
         }],
       };
@@ -114,7 +120,8 @@ export class UserResolver {
     if (!user) {
       return {
         errors: [{
-          message: 'Incorrect username/password',
+          field: 'username',
+          message: 'Incorrect username',
         }]
       }
     }
@@ -124,7 +131,8 @@ export class UserResolver {
     if (!valid) {
       return {
         errors: [{
-          message: 'Incorrect username/password',
+          field: 'password',
+          message: 'Incorrect password',
         }]
       }
     }
