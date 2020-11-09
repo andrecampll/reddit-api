@@ -113,15 +113,6 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const { username, password } = options;
 
-    if (password.length <= 2) {
-      return {
-        errors: [{
-          field: 'password',
-          message: 'Password length must be greater than 2',
-        }],
-      };
-    }
-
     const user = await em.findOne(User, {
       username,
     });
@@ -133,6 +124,15 @@ export class UserResolver {
           message: 'Incorrect username',
         }]
       }
+    }
+
+    if (password.length <= 2) {
+      return {
+        errors: [{
+          field: 'password',
+          message: 'Password length must be greater than 2',
+        }],
+      };
     }
 
     const valid = await argon2.verify(user.password, password);
